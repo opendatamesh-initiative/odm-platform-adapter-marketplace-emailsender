@@ -8,6 +8,19 @@ spring:
     date-format: yyyy-MM-dd'T'HH:mm:ss.SSSZ
     serialization:
       write-dates-as-timestamps: false
+  mail:
+    host: ${MAIL_HOST}
+    port: ${MAIL_PORT:587}
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+    default-encoding: UTF-8
+    from: ${MAIL_FROM}
 
 # OpenAPI/Swagger configuration
 springdoc:
@@ -32,3 +45,6 @@ odm:
     marketplace-service:
       active: true
       address: http://localhost:8085
+  email:
+    subscribe-template-path: ${SUBSCRIBE_TEMPLATE_PATH:classpath:templates/email/subscribe-template.mustache}
+    unsubscribe-template-path: ${UNSUBSCRIBE_TEMPLATE_PATH:classpath:templates/email/unsubscribe-template.mustache}

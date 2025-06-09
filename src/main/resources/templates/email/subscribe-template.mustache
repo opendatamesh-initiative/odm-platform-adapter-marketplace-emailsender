@@ -1,0 +1,35 @@
+Hello {{data.request.requester.identifier}},
+
+Your request for access to the following data product has been processed:
+
+Request Details:
+- Request Name: {{data.request.name}}
+- Request Identifier: {{data.request.identifier}}
+- Operation: {{data.operation}}
+- Version: {{data.v}}
+
+Data Product Information:
+- Data Product FQN: {{data.request.provider.dataProductFqn}}
+- Data Product Ports: {{#data.request.provider.dataProductPortsFqn}}{{.}}, {{/data.request.provider.dataProductPortsFqn}}
+
+Access Details:
+- Consumer Type: {{data.request.consumer.type}}
+- Consumer Identifier: {{data.request.consumer.identifier}}
+- Access Period: {{data.request.startDate}} to {{data.request.endDate}}
+
+Requester Information:
+- Requester Type: {{data.request.requester.type}}
+- Requester Identifier: {{data.request.requester.identifier}}
+
+{{#data.request.properties}}
+Additional Properties:
+{{#data.request.properties}}
+- {{@key}}: {{.}}
+{{/data.request.properties}}
+{{/data.request.properties}}
+
+Best regards,
+ODM Platform Team
+
+---
+DISCLAIMER: This is a default email template. If you believe this service is misconfigured, please contact your system administrator. 

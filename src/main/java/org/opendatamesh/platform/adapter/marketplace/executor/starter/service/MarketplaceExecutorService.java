@@ -26,15 +26,17 @@ public class MarketplaceExecutorService {
 
     private final MarketplaceServiceConfig marketplaceServiceConfig;
     private final RestTemplate restTemplate;
+    private final EmailService emailService;
 
     @Autowired
     @Lazy
     private MarketplaceExecutorService self;
 
     @Autowired
-    public MarketplaceExecutorService(MarketplaceServiceConfig marketplaceServiceConfig) {
+    public MarketplaceExecutorService(MarketplaceServiceConfig marketplaceServiceConfig, EmailService emailService) {
         this.marketplaceServiceConfig = marketplaceServiceConfig;
         this.restTemplate = new RestTemplate();
+        this.emailService = emailService;
     }
 
     public void processRequest(MarketplaceRequestRes request) {
@@ -86,19 +88,29 @@ public class MarketplaceExecutorService {
     }
 
     private void handleSubscribe(MarketplaceRequestRes request) {
-        // TODO: Implement actual subscription logic
-        // This will be executed asynchronously
+        try {
+            // Send access email to the consumer
+            emailService.sendAccessEmail(request);
 
-        // Send success response
-        sendResponse(createSuccessResponse(request, "Subscription processed successfully"), request.getRequest().getIdentifier());
+            // Send success response
+            sendResponse(createSuccessResponse(request, "Subscription processed successfully and access email sent"), request.getRequest().getIdentifier());
+        } catch (Exception e) {
+            log.error("Error processing subscription", e);
+            sendResponse(createErrorResponse(request, "Failed to process subscription: " + e.getMessage()), request.getRequest().getIdentifier());
+        }
     }
 
     private void handleUnsubscribe(MarketplaceRequestRes request) {
-        // TODO: Implement actual unsubscription logic
-        // This will be executed asynchronously
-
-        // Send success response
-        sendResponse(createSuccessResponse(request, "Unsubscription processed successfully"), request.getRequest().getIdentifier());
+        try {
+            // Send unsubscribe email notification
+            emailService.sendUnsubscribeEmail(request);
+            
+            // Send success response
+            sendResponse(createSuccessResponse(request, "Unsubscription processed successfully"), request.getRequest().getIdentifier());
+        } catch (Exception e) {
+            log.error("Error processing unsubscription request", e);
+            sendResponse(createErrorResponse(request, "Failed to process unsubscription: " + e.getMessage()), request.getRequest().getIdentifier());
+        }
     }
 
     private MarketplaceResponseRes createSuccessResponse(MarketplaceRequestRes request, String message) {
