@@ -9,13 +9,13 @@ ENV JAVA_OPTS=""
 ENV SPRING_PROPS=""
 
 # Default environment variables for email configuration
-ENV MAIL_HOST= \
-    MAIL_PORT= \
-    MAIL_USERNAME= \
-    MAIL_PASSWORD= \
-    MAIL_FROM= \
-    SUBSCRIBE_TEMPLATE_PATH=classpath:templates/email/subscribe-template.mustache \
-    UNSUBSCRIBE_TEMPLATE_PATH=classpath:templates/email/unsubscribe-template.mustache
+ENV SPRING_MAIL_HOST= \
+    SPRING_MAIL_PORT= \
+    SPRING_MAIL_USERNAME= \
+    SPRING_MAIL_PASSWORD= \
+    ODM_EMAIL_FROM= \
+    ODM_EMAIL_SUBSCRIBE_TEMPLATE_PATH=classpath:templates/email/subscribe-template.mustache \
+    ODM_EMAIL_UNSUBSCRIBE_TEMPLATE_PATH=classpath:templates/email/unsubscribe-template.mustache
 
 EXPOSE 8080
 

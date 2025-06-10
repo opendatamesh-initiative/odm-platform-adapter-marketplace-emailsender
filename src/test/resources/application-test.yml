@@ -1,0 +1,19 @@
+spring:
+  mail:
+    host: localhost
+    port: 25
+    username: test
+    password: test
+    properties:
+      mail:
+        smtp:
+          auth: false
+          starttls:
+            enable: false
+
+odm:
+  email:
+    from: test@example.com
+    useHtml: false
+    subscribe-template-path: classpath:templates/email/subscribe-template.mustache
+    unsubscribe-template-path: classpath:templates/email/unsubscribe-template.mustache 

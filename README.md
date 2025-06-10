@@ -32,11 +32,11 @@ While the service should work with any Java 11+ distribution, we recommend using
 The service can be configured through environment variables:
 
 ```yaml
-MAIL_HOST=your-smtp-server
-MAIL_PORT=587
-MAIL_USERNAME=your-username
-MAIL_PASSWORD=your-password
-MAIL_FROM=your-sender-email
+SPRING_MAIL_HOST=your-smtp-server
+SPRING_MAIL_PORT=587
+SPRING_MAIL_USERNAME=your-username
+SPRING_MAIL_PASSWORD=your-password
+ODM_EMAIL_FROM=your-sender-email
 ```
 
 ### Email Templates
@@ -53,8 +53,8 @@ Templates can be loaded from:
 
 Default template paths:
 ```yaml
-SUBSCRIBE_TEMPLATE_PATH=classpath:templates/email/subscribe-template.mustache
-UNSUBSCRIBE_TEMPLATE_PATH=classpath:templates/email/unsubscribe-template.mustache
+ODM_EMAIL_SUBSCRIBE_TEMPLATE_PATH=classpath:templates/email/subscribe-template.mustache
+ODM_EMAIL_UNSUBSCRIBE_TEMPLATE_PATH=classpath:templates/email/unsubscribe-template.mustache
 ```
 
 #### Template Variables
@@ -90,8 +90,8 @@ Additional Properties:
 2. Use the available variables in your template
 3. Configure the template path in your environment:
    ```bash
-   SUBSCRIBE_TEMPLATE_PATH=/path/to/your/subscribe-template.mustache
-   UNSUBSCRIBE_TEMPLATE_PATH=/path/to/your/unsubscribe-template.mustache
+   ODM_EMAIL_SUBSCRIBE_TEMPLATE_PATH=/path/to/your/subscribe-template.mustache
+   ODM_EMAIL_UNSUBSCRIBE_TEMPLATE_PATH=/path/to/your/unsubscribe-template.mustache
    ```
 
 ## Building the Project
@@ -135,10 +135,10 @@ docker build -t odm-marketplace-email-sender .
 ```bash
 docker run -d \
   -p 8080:8080 \
-  -e MAIL_HOST=your-smtp-server \
-  -e MAIL_USERNAME=your-username \
-  -e MAIL_PASSWORD=your-password \
-  -e MAIL_FROM=your-sender-email \
+  -e SPRING_MAIL_HOST=your-smtp-server \
+  -e SPRING_MAIL_USERNAME=your-username \
+  -e SPRING_MAIL_PASSWORD=your-password \
+  -e ODM_EMAIL_FROM=your-sender-email \
   -v /path/to/your/templates:/etc/odm/templates/email \
   odm-marketplace-email-sender
 ```
@@ -147,13 +147,13 @@ docker run -d \
 
 The following environment variables can be configured when running the container:
 
-- `MAIL_HOST`: SMTP server host
-- `MAIL_PORT`: SMTP server port (default: 587)
-- `MAIL_USERNAME`: SMTP username
-- `MAIL_PASSWORD`: SMTP password
-- `MAIL_FROM`: Sender email address
-- `SUBSCRIBE_TEMPLATE_PATH`: Path to subscription template
-- `UNSUBSCRIBE_TEMPLATE_PATH`: Path to unsubscription template
+- `SPRING_MAIL_HOST`: SMTP server host
+- `SPRING_MAIL_PORT`: SMTP server port (default: 587)
+- `SPRING_MAIL_USERNAME`: SMTP username
+- `SPRING_MAIL_PASSWORD`: SMTP password
+- `ODM_EMAIL_FROM`: Sender email address
+- `ODM_EMAIL_SUBSCRIBE_TEMPLATE_PATH`: Path to subscription template
+- `ODM_EMAIL_UNSUBSCRIBE_TEMPLATE_PATH`: Path to unsubscription template
 
 ### Volume Mounting
 
