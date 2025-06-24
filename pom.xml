@@ -4,12 +4,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.opendatamesh</groupId>
-    <artifactId>odm-platform-adapter-marketplace-executor-starter</artifactId>
+    <artifactId>odm-platform-adapter-marketplace-emailsender</artifactId>
     <version>0.0.1</version>
     <packaging>jar</packaging>
 
-    <name>ODM Platform Adapter Marketplace Executor Starter</name>
-    <description>A starter project to implement a custom ODM Platform Adapter Marketplace Executor</description>
+    <name>ODM Platform Adapter Marketplace Email Sender</name>
+    <description>A marketplace adapter for sending emails in the ODM Platform</description>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
