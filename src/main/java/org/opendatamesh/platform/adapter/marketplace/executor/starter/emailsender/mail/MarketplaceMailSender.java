@@ -1,4 +1,4 @@
-package org.opendatamesh.platform.adapter.marketplace.emailsender.mail;
+package org.opendatamesh.platform.adapter.marketplace.executor.starter.emailsender.mail;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;

@@ -1,4 +1,4 @@
-package org.opendatamesh.platform.adapter.marketplace.emailsender.mail;
+package org.opendatamesh.platform.adapter.marketplace.executor.starter.emailsender.mail;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;

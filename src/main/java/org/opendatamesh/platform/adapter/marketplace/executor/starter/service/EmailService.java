@@ -4,7 +4,7 @@ import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
 import org.opendatamesh.platform.adapter.marketplace.executor.starter.resources.MarketplaceRequestRes;
-import org.opendatamesh.platform.adapter.marketplace.emailsender.mail.MarketplaceMailSender;
+import org.opendatamesh.platform.adapter.marketplace.executor.starter.emailsender.mail.MarketplaceMailSender;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

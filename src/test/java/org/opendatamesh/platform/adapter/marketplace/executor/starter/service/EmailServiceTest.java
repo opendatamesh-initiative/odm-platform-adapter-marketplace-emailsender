@@ -6,13 +6,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
-import org.opendatamesh.platform.adapter.marketplace.emailsender.mail.MarketplaceMailSender;
-import org.opendatamesh.platform.adapter.marketplace.emailsender.mail.MockMailSender;
 import org.opendatamesh.platform.adapter.marketplace.executor.starter.resources.MarketplaceRequestRes;
 import org.opendatamesh.platform.adapter.marketplace.executor.starter.resources.RequestRes;
 import org.opendatamesh.platform.adapter.marketplace.executor.starter.resources.RequesterRes;
 import org.opendatamesh.platform.adapter.marketplace.executor.starter.resources.ProviderRes;
 import org.opendatamesh.platform.adapter.marketplace.executor.starter.config.TestConfig;
+import org.springframework.mail.javamail.JavaMailSender;
+
 import javax.mail.Part;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
@@ -29,13 +29,14 @@ public class EmailServiceTest {
     private EmailService emailService;
 
     @Autowired
-    private MarketplaceMailSender mailSender;
+    private JavaMailSender mailSender;
+
+    private TestConfig.CapturingJavaMailSender capturingMailSender;
 
     @BeforeEach
-    public void resetMockMailSender() {
-        if (mailSender instanceof MockMailSender) {
-            ((MockMailSender) mailSender).clear();
-        }
+    public void setUp() {
+        capturingMailSender = (TestConfig.CapturingJavaMailSender) mailSender;
+        capturingMailSender.clear();
     }
 
     private MarketplaceRequestRes createTestRequest() {
@@ -65,10 +66,6 @@ public class EmailServiceTest {
 
     @Test
     public void testSendAccessEmail() throws Exception {
-        // Verify we have the correct mail sender
-        assertTrue(mailSender instanceof MockMailSender, "Mail sender should be an instance of MockMailSender");
-        MockMailSender mockMailSender = (MockMailSender) mailSender;
-
         // Given
         MarketplaceRequestRes request = createTestRequest();
 
@@ -76,24 +73,35 @@ public class EmailServiceTest {
         emailService.sendAccessEmail(request);
 
         // Then
-        var sentMessages = mockMailSender.getSentMessages();
-        assertEquals(1, sentMessages.size());
+        var sentMessages = capturingMailSender.getSentMessages();
+        assertEquals(1, sentMessages.size(), "Should have sent exactly one email");
+        
         MimeMessage message = sentMessages.get(0);
-        assertNotNull(message);
+        assertNotNull(message, "Message should not be null");
+        
+        // Verify email headers
+        assertEquals("user@example.com", message.getAllRecipients()[0].toString(), 
+            "Recipient should match the requester email");
+        
+        // Verify subject line
+        String subject = message.getSubject();
+        assertNotNull(subject, "Subject should not be null");
+        assertTrue(subject.contains("Access Granted"), 
+            "Subject should contain 'Access Granted'");
         
         // Verify email content
         String content = getTextFromMimeMessage(message);
-        assertTrue(content.contains("Your request for access to the following data product has been processed:"));
-        assertTrue(content.contains(request.getRequest().getProvider().getDataProductFqn()));
-        assertTrue(content.contains(request.getRequest().getRequester().getIdentifier()));
+        assertNotNull(content, "Email content should not be null");
+        assertTrue(content.contains("Your request for access to the following data product has been processed:"), 
+            "Email should contain access confirmation message");
+        assertTrue(content.contains(request.getRequest().getProvider().getDataProductFqn()), 
+            "Email should contain the data product FQN");
+        assertTrue(content.contains(request.getRequest().getRequester().getIdentifier()), 
+            "Email should contain the requester identifier");
     }
 
     @Test
     public void testSendUnsubscribeEmail() throws Exception {
-        // Verify we have the correct mail sender
-        assertTrue(mailSender instanceof MockMailSender, "Mail sender should be an instance of MockMailSender");
-        MockMailSender mockMailSender = (MockMailSender) mailSender;
-
         // Given
         MarketplaceRequestRes request = createTestRequest();
 
@@ -101,16 +109,31 @@ public class EmailServiceTest {
         emailService.sendUnsubscribeEmail(request);
 
         // Then
-        var sentMessages = mockMailSender.getSentMessages();
-        assertEquals(1, sentMessages.size());
+        var sentMessages = capturingMailSender.getSentMessages();
+        assertEquals(1, sentMessages.size(), "Should have sent exactly one email");
+        
         MimeMessage message = sentMessages.get(0);
-        assertNotNull(message);
+        assertNotNull(message, "Message should not be null");
+        
+        // Verify email headers
+        assertEquals("user@example.com", message.getAllRecipients()[0].toString(), 
+            "Recipient should match the requester email");
+        
+        // Verify subject line
+        String subject = message.getSubject();
+        assertNotNull(subject, "Subject should not be null");
+        assertTrue(subject.contains("Unsubscription Confirmed"), 
+            "Subject should contain 'Unsubscription Confirmed'");
         
         // Verify email content
         String content = getTextFromMimeMessage(message);
-        assertTrue(content.contains("Your access to the following data product has been terminated:"));
-        assertTrue(content.contains(request.getRequest().getProvider().getDataProductFqn()));
-        assertTrue(content.contains(request.getRequest().getRequester().getIdentifier()));
+        assertNotNull(content, "Email content should not be null");
+        assertTrue(content.contains("Your access to the following data product has been terminated:"), 
+            "Email should contain unsubscribe message");
+        assertTrue(content.contains(request.getRequest().getProvider().getDataProductFqn()), 
+            "Email should contain the data product FQN");
+        assertTrue(content.contains(request.getRequest().getRequester().getIdentifier()), 
+            "Email should contain the requester identifier");
     }
 
     private static String getTextFromMimeMessage(MimeMessage message) throws Exception {
