@@ -93,7 +93,7 @@ public class MarketplaceExecutorService {
             emailService.sendAccessEmail(request);
 
             // Send success response
-            sendResponse(createSuccessResponse(request, "Subscription processed successfully and access email sent"), request.getRequest().getIdentifier());
+            sendResponse(createSuccessResponse(request, "Subscription processed successfully and access email sent", MarketplaceRequestStatus.GRANTED), request.getRequest().getIdentifier());
         } catch (Exception e) {
             log.error("Error processing subscription", e);
             sendResponse(createErrorResponse(request, "Failed to process subscription: " + e.getMessage()), request.getRequest().getIdentifier());
@@ -104,18 +104,17 @@ public class MarketplaceExecutorService {
         try {
             // Send unsubscribe email notification
             emailService.sendUnsubscribeEmail(request);
-            
             // Send success response
-            sendResponse(createSuccessResponse(request, "Unsubscription processed successfully"), request.getRequest().getIdentifier());
+            sendResponse(createSuccessResponse(request, "Unsubscription processed successfully", MarketplaceRequestStatus.REVOKED), request.getRequest().getIdentifier());
         } catch (Exception e) {
             log.error("Error processing unsubscription request", e);
             sendResponse(createErrorResponse(request, "Failed to process unsubscription: " + e.getMessage()), request.getRequest().getIdentifier());
         }
     }
 
-    private MarketplaceResponseRes createSuccessResponse(MarketplaceRequestRes request, String message) {
+    private MarketplaceResponseRes createSuccessResponse(MarketplaceRequestRes request, String message, MarketplaceRequestStatus status) {
         MarketplaceResponseRes response = new MarketplaceResponseRes();
-        response.setStatus(MarketplaceRequestStatus.GRANTED);
+        response.setStatus(status);
         response.setMessage(message);
         response.setProvider(request.getRequest().getProvider());
         response.setCreatedAt(new Date());
