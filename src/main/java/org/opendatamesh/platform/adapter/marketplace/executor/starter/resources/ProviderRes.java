@@ -31,4 +31,15 @@ public class ProviderRes {
     public void setDataProductPortsFqn(List<String> dataProductPortsFqn) {
         this.dataProductPortsFqn = dataProductPortsFqn;
     }
+
+    /**
+     * Returns data product ports FQN joined by ", " for display (e.g. in emails).
+     * No trailing comma when there is only one port.
+     */
+    public String getDataProductPortsFqnDisplay() {
+        if (dataProductPortsFqn == null || dataProductPortsFqn.isEmpty()) {
+            return "";
+        }
+        return String.join(", ", dataProductPortsFqn);
+    }
 } 
