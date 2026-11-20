@@ -163,6 +163,8 @@ To use custom email templates, mount a volume containing your template files:
 -v /host/path/to/templates:/etc/odm/templates/email
 ```
 
+The Docker Hub overview of this image is [`DOCKERHUB.md`](DOCKERHUB.md). It is published on every release, so keep it up to date.
+
 ## Default Templates
 
 The service includes default templates that are used when no custom templates are provided. These templates are located in:
